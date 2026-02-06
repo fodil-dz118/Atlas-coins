@@ -3,242 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atlas Coins | الكامل</title>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
-
+    <title>Atlas Coins | المنصة الرسمية</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        :root { --gold: #ffcc00; --bg: #050a18; --card-bg: rgba(255, 255, 255, 0.05); }
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: white; line-height: 1.6; }
-        .container { max-width: 450px; margin: auto; padding: 20px; }
-        
-        /* تنسيق الكروت */
-        .card { background: var(--card-bg); border-radius: 25px; padding: 20px; border: 1px solid rgba(255,204,0,0.1); margin-bottom: 20px; }
-        input, select { background: rgba(255,255,255,0.08); border: 1px solid #333; color: white; padding: 12px; border-radius: 12px; width: 100%; box-sizing: border-box; margin-bottom: 12px; text-align: center; }
-        .btn-gold { background: var(--gold); color: var(--bg); border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem; transition: 0.3s; }
-        .btn-gold:hover { background: #e6b800; }
+        :root {
+            --gold: #ffcc00;
+            --bg: #050a18;
+            --input-bg: rgba(255, 255, 255, 0.07);
+        }
 
-        /* الشاشات */
-        #login-screen, #setup-screen, #main-dashboard { display: none; }
-        
-        /* الصورة والـ ID */
-        .avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; cursor: pointer; }
-        .user-id-badge { display: inline-block; background: #000; color: var(--gold); padding: 5px 15px; border-radius: 10px; font-family: monospace; font-size: 0.9rem; margin-top: 10px; }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--bg);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-        /* سجل العمليات */
-        .log-list { max-height: 200px; overflow-y: auto; text-align: right; }
-        .log-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.8rem; }
-        .in { color: #28a745; } .out { color: #ff4444; }
+        /* --- شاشة تسجيل الدخول --- */
+        #login-screen {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-coin {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 30px var(--gold));
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* --- شاشة إكمال البيانات --- */
+        #setup-screen {
+            display: none; /* مخفية حتى يتم الدخول */
+            background: rgba(255, 255, 255, 0.03);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 360px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        /* اختيار صورة البروفايل */
+        .profile-section {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 25px;
+        }
+
+        .avatar-display {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--bg);
+            font-weight: bold;
+            border: 3px solid var(--gold);
+            cursor: pointer;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .avatar-display img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* حقول الإدخال */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: #8892b0;
+        }
+
+        input {
+            background: var(--input-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            outline: none;
+            text-align: center;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: var(--gold);
+        }
+
+        /* تنسيق تاريخ الميلاد المخصص */
+        .dob-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .box-day, .box-month { width: 70px; }
+        .box-year { flex: 1; }
+
+        .btn-finish {
+            width: 100%;
+            background: var(--gold);
+            color: var(--bg);
+            border: none;
+            padding: 16px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-finish:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    
-    <div id="login-screen" style="text-align: center; padding-top: 50px;">
-        <img src="Atlas.png" style="width: 120px; margin-bottom: 20px;">
-        <h1 style="color: var(--gold);">ATLAS COINS</h1>
-        <p>نظام العملات الرقمية الأكثر أماناً</p>
-        <button class="btn-gold" onclick="login()">الدخول بحساب جوجل</button>
+    <div id="login-screen">
+        <img src="Atlas.png" alt="Atlas Coin" class="main-coin">
+        <h1 style="color: #fff; margin-bottom: 10px;">Atlas Coins</h1>
+        <p style="color: #94a3b8; margin-bottom: 40px;">سجل دخولك لبدء تداول المستقبل</p>
+
+        <div id="g_id_onload"
+             data-client_id="622781570163-qh2h251eouj3orakpoj15tgma9njo3a9.apps.googleusercontent.com"
+             data-callback="onGoogleSuccess">
+        </div>
+        <div class="g_id_signin" data-type="standard" data-theme="filled_blue" data-size="large"></div>
     </div>
 
     <div id="setup-screen">
-        <div class="card" style="text-align: center;">
-            <h3>إكمال الملف الشخصي</h3>
-            <div onclick="document.getElementById('file-input').click()">
-                <img id="setup-preview" class="avatar" src="https://via.placeholder.com/90">
-                <p style="font-size: 0.7rem; color: var(--gold);">اضغط لتغيير الصورة</p>
-            </div>
-            <input type="file" id="file-input" hidden accept="image/*" onchange="previewImg(this)">
-            <input type="text" id="full-name" placeholder="الاسم الكامل">
-            <div style="display: flex; gap: 5px;">
-                <input type="number" id="b-day" placeholder="يوم">
-                <input type="number" id="b-month" placeholder="شهر">
-                <input type="number" id="b-year" placeholder="سنة">
-            </div>
-            <input type="text" id="custom-id" placeholder="اختر ID خاص بك (مثلاً: 777-888)">
-            <button class="btn-gold" onclick="saveProfile()">ابدأ رحلتك بـ 1000 عملة</button>
+        <h2 style="margin-top: 0; color: var(--gold);">إعداد الحساب</h2>
+        
+        <div class="profile-section" onclick="document.getElementById('upload-img').click()">
+            <div id="avatar-circle" class="avatar-display">A</div>
+            <input type="file" id="upload-img" hidden accept="image/*" onchange="handleImage(this)">
+            <p style="font-size: 0.7rem; color: var(--gold); margin-top: 8px;">إضافة صورة (اختياري)</p>
         </div>
+
+        <div class="input-group">
+            <label>الاسم الكامل</label>
+            <input type="text" id="user-name" placeholder="اكتب اسمك هنا" oninput="setLetter()">
+        </div>
+
+        <div class="input-group">
+            <label>تاريخ الميلاد</label>
+            <div class="dob-row">
+                <input type="number" class="box-day" placeholder="يوم" min="1" max="31">
+                <input type="number" class="box-month" placeholder="شهر" min="1" max="12">
+                <input type="number" class="box-year" placeholder="سنة">
+            </div>
+        </div>
+
+        <button class="btn-finish" onclick="saveData()">إتمام التسجيل</button>
     </div>
 
-    <div id="main-dashboard">
-        <div class="card" style="text-align: center;">
-            <img id="dash-avatar" class="avatar">
-            <h2 id="dash-name" style="margin: 10px 0;"></h2>
-            <div id="dash-id" class="user-id-badge"></div>
-            <div style="margin-top: 20px;">
-                <span style="font-size: 0.8rem; color: #888;">رصيدك الحالي</span>
-                <div style="font-size: 2.5rem; font-weight: bold;"><span id="dash-balance">0</span> AC</div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h4 style="margin: 0 0 10px 0; color: var(--gold);">🔍 بحث وتحويل</h4>
-            <div style="display: flex; gap: 5px;">
-                <input type="text" id="search-id" placeholder="أدخل ID الشخص" style="margin:0;">
-                <button onclick="searchUser()" class="btn-gold" style="width: 70px; padding: 10px;">بحث</button>
-            </div>
-            <div id="search-result" style="display:none; margin-top:15px; padding-top:15px; border-top:1px solid #333;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                    <img id="res-img" style="width: 45px; height: 45px; border-radius: 50%;">
-                    <span id="res-name" style="font-weight: bold;"></span>
-                </div>
-                <input type="number" id="amount" placeholder="المبلغ المراد إرساله">
-                <button onclick="sendCoins()" class="btn-gold" style="background:#28a745; color:white;">إرسال الآن</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <h4 style="margin-top: 0;">📜 سجل العمليات</h4>
-            <div id="log-list" class="log-list"></div>
-        </div>
-
-        <button onclick="logout()" style="background:none; border:none; color:#ff4444; cursor:pointer; width:100%;">تسجيل الخروج</button>
-    </div>
-
-</div>
-
-<script>
-    // --- 1. الإعدادات (Config) ---
-    const firebaseConfig = {
-        apiKey: "AIzaSyBQY8BgFSc4ZCQMFx-RAuFF_5osA5gzwJs",
-        authDomain: "atlas-b7490.firebaseapp.com",
-        projectId: "atlas-b7490",
-        storageBucket: "atlas-b7490.firebasestorage.app",
-        messagingSenderId: "460412683902",
-        appId: "1:460412683902:web:9e91fb6864aee0527c3a2f"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const auth = firebase.auth();
-    const provider = new firebase.auth.GoogleAuthProvider();
-    provider.setCustomParameters({ 'client_id': '622781570163-qh2h251eouj3orakpoj15tgma9njo3a9.apps.googleusercontent.com' });
-
-    let myData = null;
-    let targetDocId = null;
-    let base64Photo = "";
-
-    // --- 2. نظام الدخول ---
-    function login() {
-        auth.signInWithPopup(provider).then(res => handleAuth(res.user));
-    }
-
-    async function handleAuth(user) {
-        const doc = await db.collection("users").doc(user.uid).get();
-        if (doc.exists) {
-            startDashboard(doc.data(), user.uid);
-        } else {
-            showSetup(user);
+    <script>
+        // دالة الدخول عبر جوجل
+        function onGoogleSuccess(response) {
+            console.log("نجاح الدخول بجوجل");
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('setup-screen').style.display = 'block';
         }
-    }
 
-    function showSetup(user) {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('setup-screen').style.display = 'block';
-        document.getElementById('full-name').value = user.displayName;
-        document.getElementById('setup-preview').src = user.photoURL;
-        base64Photo = user.photoURL;
-    }
-
-    // --- 3. إدارة الملف الشخصي ---
-    function previewImg(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                base64Photo = e.target.result;
-                document.getElementById('setup-preview').src = base64Photo;
-            };
-            reader.readAsDataURL(input.files[0]);
+        // دالة وضع أول حرف تلقائياً
+        function setLetter() {
+            const nameInput = document.getElementById('user-name').value;
+            const circle = document.getElementById('avatar-circle');
+            // إذا لم تكن هناك صورة، نضع الحرف
+            if (!circle.querySelector('img')) {
+                circle.innerText = nameInput ? nameInput.charAt(0).toUpperCase() : "A";
+            }
         }
-    }
 
-    async function saveProfile() {
-        const atlasId = document.getElementById('custom-id').value;
-        const name = document.getElementById('full-name').value;
-        const bday = `${document.getElementById('b-day').value}/${document.getElementById('b-month').value}/${document.getElementById('b-year').value}`;
-        
-        if(!atlasId || !name) return alert("أكمل البيانات!");
+        // دالة معالجة صورة البروفايل
+        function handleImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const circle = document.getElementById('avatar-circle');
+                    circle.innerHTML = `<img src="${e.target.result}">`;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
 
-        const newUser = {
-            name: name,
-            atlasId: atlasId,
-            photo: base64Photo,
-            birthday: bday,
-            balance: 1000,
-            uid: auth.currentUser.uid
-        };
-
-        await db.collection("users").doc(newUser.uid).set(newUser);
-        startDashboard(newUser, newUser.uid);
-    }
-
-    // --- 4. لوحة التحكم والتحويل ---
-    function startDashboard(data, uid) {
-        myData = {...data, uid: uid};
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('setup-screen').style.display = 'none';
-        document.getElementById('main-dashboard').style.display = 'block';
-
-        document.getElementById('dash-name').innerText = myData.name;
-        document.getElementById('dash-avatar').src = myData.photo;
-        document.getElementById('dash-id').innerText = "ID: " + myData.atlasId;
-        document.getElementById('dash-balance').innerText = myData.balance.toLocaleString();
-        getLogs();
-    }
-
-    async function searchUser() {
-        const sid = document.getElementById('search-id').value;
-        const snap = await db.collection("users").where("atlasId", "==", sid).get();
-        if (snap.empty) return alert("لم يتم العثور على الشخص!");
-        
-        const user = snap.docs[0].data();
-        targetDocId = snap.docs[0].id;
-        document.getElementById('res-name').innerText = user.name;
-        document.getElementById('res-img').src = user.photo;
-        document.getElementById('search-result').style.display = 'block';
-    }
-
-    async function sendCoins() {
-        const val = parseInt(document.getElementById('amount').value);
-        if (val > myData.balance || val <= 0) return alert("رصيدك غير كافٍ!");
-
-        const batch = db.batch();
-        batch.update(db.collection("users").doc(myData.uid), { balance: firebase.firestore.FieldValue.increment(-val) });
-        batch.update(db.collection("users").doc(targetDocId), { balance: firebase.firestore.FieldValue.increment(val) });
-        batch.set(db.collection("transactions").doc(), {
-            fromId: myData.atlasId, fromName: myData.name,
-            toId: document.getElementById('search-id').value, toName: document.getElementById('res-name').innerText,
-            amount: val, date: new Date()
-        });
-
-        await batch.commit();
-        alert("تم التحويل!");
-        location.reload();
-    }
-
-    async function getLogs() {
-        const q1 = await db.collection("transactions").where("fromId", "==", myData.atlasId).get();
-        const q2 = await db.collection("transactions").where("toId", "==", myData.atlasId).get();
-        let logs = [];
-        q1.forEach(d => logs.push({...d.data(), type: 'out'}));
-        q2.forEach(d => logs.push({...d.data(), type: 'in'}));
-        logs.sort((a,b) => b.date - a.date);
-        
-        document.getElementById('log-list').innerHTML = logs.map(l => `
-            <div class="log-item">
-                <span>${l.type=='out' ? 'إلى: '+l.toName : 'من: '+l.fromName}</span>
-                <span class="${l.type=='out' ? 'out' : 'in'}">${l.type=='out'?'-':'+'}${l.amount}</span>
-            </div>
-        `).join('');
-    }
-
-    function logout() { auth.signOut().then(() => location.reload()); }
-    
-    // مراقبة الدخول
-    auth.onAuthStateChanged(user => { if(user) handleAuth(user); else document.getElementById('login-screen').style.display='block'; });
-</script>
-
+        // دالة الحفظ النهائي
+        function saveData() {
+            alert("تم إعداد ملفك الشخصي بنجاح في Atlas Coins!");
+            // هنا يمكنك التوجيه للصفحة التالية
+        }
+    </script>
 </body>
 </html>
