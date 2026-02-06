@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Coins | مستقبل العملات الرقمية</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #ffcc00;
+            --bg: #050a18;
+            --card-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* النافبار (Header) */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10%;
+            background: rgba(5, 10, 24, 0.8);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 80%;
+            z-index: 1000;
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-area img { width: 40px; }
+
+        /* القسم الرئيسي */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: radial-gradient(circle at top right, #1e3a8a 0%, transparent 40%);
+        }
+
+        .main-coin {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 30px var(--gold));
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        h1 { font-size: 3.5rem; margin: 0; color: var(--gold); }
+        p.subtitle { font-size: 1.2rem; color: #94a3b8; max-width: 600px; margin-bottom: 40px; }
+
+        /* حاوية تسجيل الدخول */
+        .login-box {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* قسم المميزات */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 100px 10%;
+            background: #081021;
+        }
+
+        .feat-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+
+        .feat-card:hover { border-color: var(--gold); background: rgba(255,255,255,0.08); }
+        .feat-card h3 { color: var(--gold); }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo-area">
+            <img src="Atlas.png" alt="logo">
+            <span style="font-weight: bold; font-size: 1.2rem;">ATLAS COINS</span>
+        </div>
+        <div>
+            <a href="#" style="color: white; text-decoration: none; margin-left: 20px;">الرئيسية</a>
+            <a href="#" style="color: white; text-decoration: none;">السوق</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <img src="Atlas.png" alt="Atlas Coin" class="main-coin">
+        <h1>إبدأ استثمارك مع Atlas Coins</h1>
+        <p class="subtitle">المنصة الأسرع والأكثر أماناً لتداول العملات الرقمية في الشرق الأوسط. انضم إلى آلاف المستثمرين اليوم.</p>
+        
+        <div class="login-box">
+            <div id="g_id_onload"
+                 data-client_id="622781570163-qh2h251eouj3orakpoj15tgma9njo3a9.apps.googleusercontent.com"
+                 data-callback="handleSignIn">
+            </div>
+            <div class="g_id_signin" data-type="standard" data-theme="filled_blue" data-size="large" data-text="continue_with"></div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feat-card">
+            <h3>🔒 أمان مطلق</h3>
+            <p>نستخدم تقنيات التشفير لضمان حماية محفظتك وأموالك على مدار الساعة.</p>
+        </div>
+        <div class="feat-card">
+            <h3>⚡ سرعة البرق</h3>
+            <p>عمليات سحب وإيداع فورية دون أي تأخير تقني.</p>
+        </div>
+        <div class="feat-card">
+            <h3>📊 تحليلات ذكية</h3>
+            <p>نوفر لك أدوات بيانية متطورة لمراقبة حركة العملات لحظة بلحظة.</p>
+        </div>
+    </section>
+
+    <script>
+        function handleSignIn(response) {
+            alert("تم تسجيل الدخول بنجاح إلى منصة أطلس! سيتم نقلك إلى لوحة التحكم.");
+            // هنا يمكنك التوجيه لصفحة الرصيد
+        }
+    </script>
+</body>
+</html>
